@@ -76,38 +76,60 @@ public function unfollow($userId)
     }
 }
 
-
 public function is_following($userId) {
     return $this->followings()->where('follow_id', $userId)->exists();
-
 }
 
-    public function favings()
+     public function feed_microposts()
     {
-        return $this->belongsToMany(User::class, 'user_favorite', 'user_id', 'favorite_id')->withTimestamps();
+        $follow_user_ids = $this->followings()-> pluck('users.id')->toArray();
+        $follow_user_ids[] = $this->id;
+        return Micropost::whereIn('user_id', $follow_user_ids);
     }
 
-    public function favers()
+
+ public function favings()
     {
-        return $this->belongsToMany(User::class, 'user_favorite', 'favorite_id', 'user_id')->withTimestamps();
+        return $this->belongsToMany(Micropost::class, 'user_favorite', 'user_id', 'favorite_id')->withTimestamps();
     }
 
-public function favorite($userId)
+
+    
+    public function favorite($micropostId)
 {
     // confirm if already following
-    $exist = $this->is_faving($userId);
+    $exist = $this->is_faving($micropostId);
     // confirming that it is not you
-
+  
+    if ($exist) {
+        // do nothing if already following
+        return false;
+    } else {
+        // follow if not following
+        $this->favings()->attach($micropostId);
+        return true;
     }
+}
 
-public function unfavorite($userId)
+
+public function unfavorite($micropostId)
 {
     // confirming if already following
-    $exist = $this->is_faving($userId);
-    // confirming that it is not you
+    $exist = $this->is_faving($micropostId);
+
+
+    if ($exist) {
+        // stop following if following
+        $this->favings()->detach($micropostId);
+        return true;
+    } else {
+        // do nothing if not following
+        return false;
+    }
 }
 
-public function is_faving($userId) {
-    return $this->favings()->where('favorite_id', $userId)->exists();
+public function is_faving($micropostId) {
+    return $this->favings()->where('favorite_id', $micropostId)->exists();
 }
 }
+

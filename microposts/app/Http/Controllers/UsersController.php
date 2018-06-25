@@ -63,21 +63,19 @@ class UsersController extends Controller
     
     
     
-    
-    
       public function favings($id)
     {
         $user = User::find($id);
-        $followings = $user->favings()->paginate(10);
+        $favings = $user->favings()->paginate(10);
 
         $data = [
             'user' => $user,
-            'users' => $favings,
+            'microposts' => $favings,
         ];
 
         $data += $this->counts($user);
 
-        return view('users.followings', $data);
+        return view('users.favorite', $data);
     }
 
     public function favers($id)
@@ -94,6 +92,5 @@ class UsersController extends Controller
 
         return view('users.favers', $data);
     }
-
-    
 }
+    

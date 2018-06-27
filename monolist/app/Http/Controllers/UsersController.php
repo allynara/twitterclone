@@ -4,9 +4,14 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use App\Http\Controllers\Controller;
+
+use App\User;
+use App\Item;
+
 class UsersController extends Controller
 {
-/**
+    /**
      * Display the specified resource.
      *
      * @param  int  $id

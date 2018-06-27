@@ -5,17 +5,14 @@
                 <div class="col-md-3 col-sm-4 col-xs-12">
                     <div class="panel panel-default">
                         <div class="panel-heading text-center">
-                            <img src="{{ $item->image_url }}" alt="" class="">
+                            <img src="{{ $item->image_url }}" alt="">
                         </div>
                         <div class="panel-body">
-                            @if ($item->id)
-                                <p class="item-title"><a href="{{ route('items.show', $item->id) }}">{{ $item->name }}</a></p>
-                            @else
-                                <p class="item-title">{{ $item->name }}</p>
-                            @endif
-                            <div class="buttons text-center">
+                            <p class="item-title"><a href="#">{{ $item->name }}</a></p>
+                           <div class="buttons text-center">
                                 @if (Auth::check())
                                     @include('items.want_button', ['item' => $item])
+                                    @include('items.have_button', ['item' => $item])
                                 @endif
                             </div>
                         </div>
